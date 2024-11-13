@@ -1,0 +1,126 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sistem Pakar Kelapa Sawit</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-green-100">
+    <header class="bg-green-700 text-white py-4">
+        <div class="container mx-auto text-center">
+            <h1 class="text-3xl font-bold">Sistem Pakar Kelapa Sawit</h1>
+            <p class="text-lg">Diagnosis Gejala Penyakit dan Hama serta Cara Penanganannya pada Tanaman Kelapa Sawit</p>
+        </div>
+    </header>
+    <nav class="bg-green-800 text-white">
+        <div class="container mx-auto flex justify-center space-x-4 py-2">
+            <a class="hover:bg-green-700 px-3 py-2 rounded" href="index.html">Home</a>
+            <a class="hover:bg-green-700 px-3 py-2 rounded" href="diagnosis.html">Diagnosis</a>
+            <a class="hover:bg-green-700 px-3 py-2 rounded" href="penyakit.html">Daftar Penyakit</a>
+            <a class="hover:bg-green-700 px-3 py-2 rounded" href="hama.html">Daftar Hama</a>
+        </div>
+    </nav>
+    <div class="container mx-auto my-8">
+        <section class="mb-8" id="diagnosis">
+            <h2 class="text-2xl font-bold text-center mb-4">Diagnosis Gejala</h2>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <form id="diagnosisForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="gejala">Masukkan Gejala:</label>
+                        <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="gejala" name="gejala" placeholder="Deskripsikan gejala yang dialami tanaman kelapa sawit" rows="2"></textarea>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button class="bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" id="submitBtn" type="button">Diagnosis</button>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-8" id="result"></div>
+        </section>
+    </div>
+    <footer class="bg-green-800 text-white py-4">
+        <div class="container mx-auto text-center">
+            <p>© 2024 UAS PBO. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const gejala = document.getElementById('gejala').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p class="text-center text-lg font-bold">Hasil Diagnosis:</p>';
+            let results = [];
+
+            // Database gejala, penyakit, dan pengobatan
+            const symptomsDatabase = {
+                'daun menguning': [
+                    {
+                        disease: "Terjangkit Jamur Ganoderma",
+                        handling: "Melakukan pemangkasan pelepah kering dan menghilangkan bagian tanaman yang terinfeksi atau Menggunakan racun untuk mempercepat pengendalian pada tunggul-tunggul yang terinfeksi.",
+                        
+                    },
+                ],
+                'pucuk daun busuk': [
+                    {
+                        disease: 'Serangan Jamur Erwinia sp ini dapat menyebabkan pembusukan pada pucuk dan tun as tanaman kelapa sawit, mengakibatkan kerusakan yang signifikan',
+                        handling: 'Segera memusnahkan tanaman yang terinfeksi untuk mencegah penyebaran lebih lanjut ke tanaman sehat di sekitarnya atau Menggunakan fungisida sistemik yang efektif, seperti binomil, untuk mengendalikan infeksi jamur. Pastikan untuk mengikuti dosis yang dianjurkan.',
+                    },
+                ],
+                'pertumbuhan terhambat': [
+                    {
+                        disease: 'Hama atau Kondisi Tanah yang Buruk',
+                        handling: 'Periksa kondisi tanah dan gunakan pestisida yang sesuai.',
+                    }
+                ],
+                'daun coklat': [
+                    {
+                        disease: 'Penyakit Jamur',
+                        description: 'Gejala: Daun berwarna coklat dan kering.',
+                        handling: 'Gunakan fungisida dan perbaiki sirkulasi udara.',
+                    }
+                ],
+                'akar busuk': [
+                    {
+                        disease: 'Penyakit Akar Busuk',
+                        description: 'Gejala: Akar tanaman membusuk dan tanaman layu.',
+                        handling: 'Kurangi penyiraman dan gunakan fungisida.',
+                    }
+                ]
+            };
+
+            // periksa gejala di input
+            for (const symptom in symptomsDatabase) {
+                if (gejala.toLowerCase().includes(symptom)) {
+                    symptomsDatabase[symptom].forEach(item => {
+                        results.push(`
+                            <div class="bg-white rounded-lg shadow-md p-4 mt-4">
+                                <h3 class="text-xl font-bold mb-2">Gejala: ${symptom.charAt(0).toUpperCase() + symptom.slice(1)}</h3>
+                                <p class="text-gray-700">Kemungkinan Penyakit: ${item.disease}</p>
+                                ${item.description ? `<p class="text-gray-700">Gejala yang Ditimbulkan: ${item.description}</p>` : ''}
+                                <p class="text-gray-700">Penanganan: ${item.handling}</p>
+                            </div>
+                        `);
+                    });
+                }
+            }
+
+            // Jika hasilnya ditemukan, tampilkan; jika tidak, tampilkan pesan gejala yang tidak diketahui
+            if (results.length > 0) {
+                resultDiv.innerHTML += results.join('');
+            } else {
+                resultDiv.innerHTML += `
+                    <div class="bg-white rounded-lg shadow-md p-4 mt-4">
+                        <h3 class="text-xl font-bold mb-2">Gejala Tidak Dikenali</h3>
+                        <p class="text-gray-700">Silakan konsultasikan dengan ahli pertanian untuk diagnosis lebih lanjut.</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
